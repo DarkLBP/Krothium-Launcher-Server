@@ -60,11 +60,10 @@ public class StubLauncher {
                         usingFile = outJar;
                     }
                     URL.setURLStreamHandlerFactory(new URLHandler());
-                    URLClassLoader classLoader = (URLClassLoader)ClassLoader.getSystemClassLoader();
-                    Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-                    method.setAccessible(true);
-                    method.invoke(classLoader, usingFile.toURI().toURL());
-                    Class<?> cl = Class.forName(atrb.getValue(Attributes.Name.MAIN_CLASS));
+                    ClassLoader loader = URLClassLoader.newInstance(new URL[]{usingFile.toURI().toURL()}, StubLauncher.class.getClassLoader());
+                    String mainClass = atrb.getValue(Attributes.Name.MAIN_CLASS);
+                    System.out.println("Loading class " + mainClass);
+                    Class<?> cl = Class.forName(mainClass, true, loader);
                     Method meth = cl.getMethod("main", String[].class);
                     meth.invoke(null, (Object) args);
                 } else {
