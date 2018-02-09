@@ -33,6 +33,8 @@ class Starter {
             } catch (Exception ex){
                 ex.printStackTrace();
             }
+        } else {
+            System.out.println("File not found " + custom.getAbsolutePath());
         }
     }
 }
